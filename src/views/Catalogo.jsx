@@ -4,13 +4,13 @@ import { db } from "../database/firebaseconfig";
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import TarjetaProducto from "../components/catalogo/TarjetaProducto";
 import ModalEdicionProducto from "../components/productos/ModalEdicionProducto";
-//import TarjetaProducto from "../components/catalogo/TarjetaProducto";
-//import ModalEdicionProducto from "../components/catalogo/ModalEdicionProducto";
+import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
 
 const Catalogo = () => {
   const [productos, setProductos] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("Todas");
+  const [searchText, setSearchText] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
   const [productoEditado, setProductoEditado] = useState(null);
 
@@ -68,9 +68,14 @@ const Catalogo = () => {
     }
   };
 
-  const productosFiltrados = categoriaSeleccionada === "Todas"
-    ? productos
-    : productos.filter(producto => producto.categoria === categoriaSeleccionada);
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value);
+  };
+
+  const productosFiltrados = productos.filter(producto => 
+    (categoriaSeleccionada === "Todas" || producto.categoria === categoriaSeleccionada) &&
+    producto.nombre.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
     <Container className="mt-5">
@@ -86,6 +91,12 @@ const Catalogo = () => {
               ))}
             </Form.Select>
           </Form.Group>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col lg={3} md={3} sm={6}>
+          <CuadroBusquedas searchText={searchText} handleSearchChange={handleSearchChange} />
         </Col>
       </Row>
 

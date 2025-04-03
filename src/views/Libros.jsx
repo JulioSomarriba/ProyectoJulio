@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Button, Alert } from "react-bootstrap";
+import { Container, Button, Alert, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { db, storage } from "../database/firebaseconfig";
 import {
@@ -32,6 +32,7 @@ const Libros = () => {
   const [libroAEliminar, setLibroAEliminar] = useState(null);
   const [pdfFile, setPdfFile] = useState(null);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(""); // Estado para el buscador
 
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
@@ -187,6 +188,11 @@ const Libros = () => {
     setShowDeleteModal(true);
   };
 
+  // Filtrar libros por nombre según la búsqueda
+  const librosFiltrados = libros.filter((libro) =>
+    libro.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <Container className="mt-5">
       <br />
@@ -195,35 +201,23 @@ const Libros = () => {
       <Button className="mb-3" onClick={() => setShowModal(true)}>
         Agregar libro
       </Button>
-      <TablaLibros
-        libros={libros}
-        openEditModal={openEditModal}
-        openDeleteModal={openDeleteModal}
+
+      {/* Cuadro de búsqueda */}
+      <Form.Control
+        type="text"
+        placeholder="Buscar por nombre..."
+        className="mb-3"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
       />
-      <ModalRegistroLibro
-        showModal={showModal}
-        setShowModal={setShowModal}
-        nuevoLibro={nuevoLibro}
-        handleInputChange={handleInputChange}
-        handlePdfChange={handlePdfChange}
-        handleAddLibro={handleAddLibro}
-      />
-      <ModalEdicionLibro
-        showEditModal={showEditModal}
-        setShowEditModal={setShowEditModal}
-        libroEditado={libroEditado}
-        handleEditInputChange={handleEditInputChange}
-        handleEditPdfChange={handleEditPdfChange}
-        handleEditLibro={handleEditLibro}
-      />
-      <ModalEliminacionLibro
-        showDeleteModal={showDeleteModal}
-        setShowDeleteModal={setShowDeleteModal}
-        handleDeleteLibro={handleDeleteLibro}
-      />
+
+      <TablaLibros libros={librosFiltrados} openEditModal={openEditModal} openDeleteModal={openDeleteModal} />
+      
+      <ModalRegistroLibro {...{ showModal, setShowModal, nuevoLibro, handleInputChange, handlePdfChange, handleAddLibro }} />
+      <ModalEdicionLibro {...{ showEditModal, setShowEditModal, libroEditado, handleEditInputChange, handleEditPdfChange, handleEditLibro }} />
+      <ModalEliminacionLibro {...{ showDeleteModal, setShowDeleteModal, handleDeleteLibro }} />
     </Container>
   );
 };
 
 export default Libros;
-

@@ -13,6 +13,7 @@ import TablaProductos from "../components/productos/TablaProductos";
 import ModalRegistroProducto from "../components/productos/ModalRegistroProducto";
 import ModalEdicionProducto from "../components/productos/ModalEdicionProducto";
 import ModalEliminacionProducto from "../components/productos/ModalEliminacionProducto";
+import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
 
 const Productos = () => {
   // Estados para manejo de datos
@@ -21,6 +22,7 @@ const Productos = () => {
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [searchText, setSearchText] = useState("");
   const [nuevoProducto, setNuevoProducto] = useState({
     nombre: "",
     precio: "",
@@ -97,6 +99,15 @@ const Productos = () => {
     }
   };
 
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value);
+  };
+
+  const filteredProductos = productos.filter((producto) =>
+  producto.nombre.toLowerCase().includes(searchText.toLowerCase())
+);
+
+
   // Función para agregar un nuevo producto (CREATE)
   const handleAddProducto = async () => {
     if (!nuevoProducto.nombre || !nuevoProducto.precio || !nuevoProducto.categoria) {
@@ -163,8 +174,10 @@ const Productos = () => {
       <Button className="mb-3" onClick={() => setShowModal(true)}>
         Agregar producto
       </Button>
+      <CuadroBusquedas searchText={searchText} handleSearchChange={handleSearchChange} />
+
       <TablaProductos
-        productos={productos}
+        productos={filteredProductos}
         openEditModal={openEditModal}
         openDeleteModal={openDeleteModal}
       />

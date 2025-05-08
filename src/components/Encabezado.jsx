@@ -4,8 +4,8 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import logo from "../react.svg";
 import { useAuth } from "../database/authcontext";
+import logo from "../assets/ferreteria_selva_logo.png";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import "../App.css";
 
@@ -97,6 +97,8 @@ const Encabezado = () => {
                   <strong>Clima</strong>
 
               </Nav.Link>
+
+              
 
 
             </Nav>

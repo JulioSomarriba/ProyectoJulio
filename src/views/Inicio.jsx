@@ -69,11 +69,12 @@ console.log("solicitudInstalacion:", solicitudInstalacion);
       <button onClick={() => handleNavigate("/productos")} >Ir a Productos</button>
       <button onClick={() => handleNavigate("/libros")} >Ir a Libros</button>
       <button onClick={() => handleNavigate("/catalogos")} >Ir a Catalogos</button>
+      <button onClick={() => handleNavigate("/pronunciacion")} >Ir a pronunciacion</button>
       <br />
       {!esDispositivoIOS && mostrarBotonInstalacion && (
         <div className="my-4">
           <Button className="sombra" variant="primary" onClick={instalacion}>
-            Instalar app Ferretería Selva <i className="bi bi-download"></i>
+            Instalar app Proyecto Julio <i className="bi bi-download"></i>
           </Button>
         </div>
       )}

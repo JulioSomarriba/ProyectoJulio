@@ -98,6 +98,10 @@ const Encabezado = () => {
 
               </Nav.Link>
 
+              <Nav.Link onClick={() => handleNavigate("/estadisticas")} className="text-white">
+            Estadisticas
+          </Nav.Link>
+
               
 
 

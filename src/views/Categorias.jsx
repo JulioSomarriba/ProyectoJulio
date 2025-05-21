@@ -17,6 +17,7 @@ import ModalEdicionCategoria from "../components/Categorias/ModalEdicionCategori
 import ModalEliminacionCategoria from "../components/Categorias/ModalEliminacionCategoria";
 import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
 import Paginacion from "../components/ordenamiento/Paginacion"; 
+import ChatIA from "../components/chat/ChatIA";
 
 const Categorias = () => {
   const [categorias, setCategorias] = useState([]);
@@ -24,6 +25,7 @@ const Categorias = () => {
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showChatModal, setShowChatModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -82,6 +84,10 @@ const Categorias = () => {
 
       <Button className="mb-3" onClick={() => setShowModal(true)}>
         Agregar categoría
+      </Button>
+
+      <Button className="mb-3" onClick={() => setShowChatModal(true)} style={{ width: "100%" }}>
+        Chat IA
       </Button>
 
       <TablaCategorias
@@ -176,6 +182,7 @@ const Categorias = () => {
           }
         }}
       />
+       <ChatIA showChatModal={showChatModal} setShowChatModal={setShowChatModal} />
     </Container>
   );
 };

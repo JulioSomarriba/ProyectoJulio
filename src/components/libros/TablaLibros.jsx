@@ -42,7 +42,7 @@ const TablaLibros = ({ libros, openEditModal, openDeleteModal }) => {
                 onClick={() => openDeleteModal(libro)}
               >
                 <i className="bi bi-trash"></i>
-              </Button>
+              </Button> 
             </td>
           </tr>
         ))}

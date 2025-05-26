@@ -25,9 +25,13 @@ const TablaLibros = ({ libros, openEditModal, openDeleteModal }) => {
                 <a href={libro.pdfUrl} target="_blank" rel="noopener noreferrer">
                   Ver PDF
                 </a>
+              
               )}
             </td>
+            
             <td>
+
+           
               <Button
                 variant="outline-warning"
                 size="sm"
@@ -36,6 +40,7 @@ const TablaLibros = ({ libros, openEditModal, openDeleteModal }) => {
               >
                 <i className="bi bi-pencil"></i>
               </Button>
+
               <Button
                 variant="outline-danger"
                 size="sm"
@@ -43,6 +48,15 @@ const TablaLibros = ({ libros, openEditModal, openDeleteModal }) => {
               >
                 <i className="bi bi-trash"></i>
               </Button> 
+
+              <Button
+                  variant="outline-dark"
+                  size="sm"
+                  className="me-2"
+                  onClick={() => openQRModal(libro.pdfUrl)}
+                >
+                  <i className="bi bi-qr-code"></i>
+                </Button>
             </td>
           </tr>
         ))}

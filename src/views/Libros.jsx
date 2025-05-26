@@ -16,9 +16,12 @@ import ModalRegistroLibro from "../components/libros/ModalRegistroLibro";
 import ModalEdicionLibro from "../components/libros/ModalEdicionLibro";
 import ModalEliminacionLibro from "../components/libros/ModalEliminacionLibro";
 import { useAuth } from "../database/authcontext";
+import ModalQR from "../components/qr/ModalQR";
 
 const Libros = () => {
   const [libros, setLibros] = useState([]);
+  const [showQRModal, setShowQRModal] = useState(false);
+  const [selectedUrl, setSelectedUrl] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -33,6 +36,30 @@ const Libros = () => {
   const [pdfFile, setPdfFile] = useState(null);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState(""); // Estado para el buscador
+
+ //Metodos para el QR
+ const openQRModal = (url) =>{
+  setShowQRModal(url);
+  setSelectedUrl("");
+}
+ 
+  const handleCloseQRModal = () => {
+    setShowQRModal(false);
+    selectedUrl("");
+  }
+
+  const handleCopy = (productos) =>{
+    const rowData = `Nombre: ${productos.nombre}\nPrecio: C$${productos.precio}\nCategoria: ${productos.categoria}`;
+    
+
+    navigator.clipboard
+    .writeText(rowData)
+    .then(() =>{
+      console.log("Error el copiar al portapapeles", err);
+    });
+  };
+
+  
 
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
@@ -216,6 +243,11 @@ const Libros = () => {
       <ModalRegistroLibro {...{ showModal, setShowModal, nuevoLibro, handleInputChange, handlePdfChange, handleAddLibro }} />
       <ModalEdicionLibro {...{ showEditModal, setShowEditModal, libroEditado, handleEditInputChange, handleEditPdfChange, handleEditLibro }} />
       <ModalEliminacionLibro {...{ showDeleteModal, setShowDeleteModal, handleDeleteLibro }} />
+      <ModalQR
+      show={showQRModal}
+      handleClose={handleCloseQRModal}
+      qrUrl={selectedUrl}
+       />
     </Container>
   );
 };

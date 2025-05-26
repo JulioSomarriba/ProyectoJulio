@@ -41,6 +41,16 @@ const TablaProductos = ({ productos, openEditModal, openDeleteModal }) => {
               >
                 <i className="bi bi-trash"></i>
               </Button>
+
+              
+
+              <Button
+                  variant="outline-info"
+                  size="sm"
+                  onClick={() => handleCopy(producto)}
+                >
+                  <i className="bi bi-clipboard"></i>
+                </Button>
             </td>
           </tr>
         ))}

@@ -18,6 +18,8 @@ import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
 import Paginacion from "../components/ordenamiento/Paginacion";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 const generarPDFDetalleProducto = (producto) => {
   const pdf = new jsPDF();
@@ -243,6 +245,74 @@ const Productos = () => {
     doc.save(nombreArchivo);
   };
 
+   // Generar PDF para un producto específico
+   const generarPDFDetalleProducto = (producto) => {
+    const pdf = new jsPDF();
+
+    // Encabezado
+    pdf.setFillColor(28, 41, 51);
+    pdf.rect(0, 0, 220, 30, 'F');
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(22);
+    pdf.text(producto.nombre, pdf.internal.pageSize.getWidth() / 2, 18, { align: "center" });
+
+    // Imagen
+    if (producto.imagen) {
+      const propiedadesImagen = pdf.getImageProperties(producto.imagen);
+      const anchoPagina = pdf.internal.pageSize.getWidth();
+      const anchoImagen = 60;
+      const altoImagen = (propiedadesImagen.height * anchoImagen) / propiedadesImagen.width;
+      const posicionX = (anchoPagina - anchoImagen) / 2;
+      pdf.addImage(producto.imagen, 'JPEG', posicionX, 40, anchoImagen, altoImagen);
+
+      const posicionY = 40 + altoImagen + 10;
+      pdf.setTextColor(0, 0, 0);
+      pdf.setFontSize(14);
+      pdf.text(`Precio: C$ ${producto.precio}`, anchoPagina / 2, posicionY, { align: "center" });
+      pdf.text(`Categoría: ${producto.categoria}`, anchoPagina / 2, posicionY + 10, { align: "center" });
+    } else {
+      const anchoPagina = pdf.internal.pageSize.getWidth();
+      pdf.setTextColor(0, 0, 0);
+      pdf.setFontSize(14);
+      pdf.text(`Precio: C$ ${producto.precio}`, anchoPagina / 2, 50, { align: "center" });
+      pdf.text(`Categoría: ${producto.categoria}`, anchoPagina / 2, 60, { align: "center" });
+    }
+
+    pdf.save(`${producto.nombre}.pdf`);
+  };
+
+  const exportarExcelProductos = () => {
+    const datos = filteredProductos.map((producto, index) => ({
+      "#": index + 1,
+      Nombre: producto.nombre,
+      Precio: parseFloat(producto.precio),
+      Categoría: producto.categoria,
+    }));
+  
+    const hoja = XLSX.utils.json_to_sheet(datos);
+    const libro = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(libro, hoja, "Productos");
+  
+    const excelBuffer = XLSX.write(libro, {
+      bookType: "xlsx",
+      type: "array",
+    });
+  
+    const fecha = new Date();
+    const dia = String(fecha.getDate()).padStart(2, "0");
+    const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+    const anio = fecha.getFullYear();
+    const nombreArchivo = `Productos_${dia}${mes}${anio}.xlsx`;
+  
+    const blob = new Blob([excelBuffer], {
+      type:
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+    });
+  
+    saveAs(blob, nombreArchivo);
+  };
+  
+
   return (
     <Container className="mt-5">
       <br />
@@ -263,6 +333,17 @@ const Productos = () => {
             Generar reporte PDF
           </Button>
         </Col>
+
+        <Col lg={3} md={4} sm={4} xs={5}>
+      <Button
+        className="mb-3"
+        onClick={exportarExcelProductos}
+        variant="secondary"
+        style={{ width: "100%" }}
+      >
+        Generar Excel
+      </Button>
+    </Col>
       </Row>
 
       <CuadroBusquedas searchText={searchText} handleSearchChange={handleSearchChange} />

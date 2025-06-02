@@ -10,3 +10,8 @@
 .margen-superior-main {
   margin-top: 60px;
 }
+
+.texto-blanco .dropdown-toggle {
+  color: #fff !important;
+  font-weight: bold;
+}

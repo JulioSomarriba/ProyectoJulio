@@ -312,6 +312,13 @@ const Productos = () => {
     saveAs(blob, nombreArchivo);
   };
   
+  const handleCopy = (producto) => {
+    const texto = `Nombre: ${producto.nombre}\nPrecio: C$ ${producto.precio}\nCategoría: ${producto.categoria}`;
+    navigator.clipboard.writeText(texto)
+      .then(() => alert("Producto copiado al portapapeles"))
+      .catch((err) => console.error("Error al copiar:", err));
+  };
+  
 
   return (
     <Container className="mt-5">
@@ -353,6 +360,7 @@ const Productos = () => {
         openEditModal={openEditModal}
         openDeleteModal={openDeleteModal}
         generarPDFDetalleProducto={generarPDFDetalleProducto}
+        handleCopy={handleCopy}
       />
 
       <Paginacion

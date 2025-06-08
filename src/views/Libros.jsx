@@ -35,31 +35,18 @@ const Libros = () => {
   const [libroAEliminar, setLibroAEliminar] = useState(null);
   const [pdfFile, setPdfFile] = useState(null);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(""); // Estado para el buscador
+  const [searchTerm, setSearchTerm] = useState("");
 
- //Metodos para el QR
- const openQRModal = (url) =>{
-  setShowQRModal(url);
-  setSelectedUrl("");
-}
- 
-  const handleCloseQRModal = () => {
-    setShowQRModal(false);
-    selectedUrl("");
-  }
-
-  const handleCopy = (productos) =>{
-    const rowData = `Nombre: ${productos.nombre}\nPrecio: C$${productos.precio}\nCategoria: ${productos.categoria}`;
-    
-
-    navigator.clipboard
-    .writeText(rowData)
-    .then(() =>{
-      console.log("Error el copiar al portapapeles", err);
-    });
+  // Método para abrir QR
+  const openQRModal = (url) => {
+    setSelectedUrl(url);
+    setShowQRModal(true);
   };
 
-  
+  const handleCloseQRModal = () => {
+    setShowQRModal(false);
+    setSelectedUrl("");
+  };
 
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
@@ -117,12 +104,6 @@ const Libros = () => {
   };
 
   const handleAddLibro = async () => {
-    if (!isLoggedIn) {
-      alert("Debes iniciar sesión para agregar un libro.");
-      navigate("/login");
-      return;
-    }
-
     if (!nuevoLibro.nombre || !nuevoLibro.autor || !nuevoLibro.genero || !pdfFile) {
       alert("Por favor, completa todos los campos y selecciona un PDF.");
       return;
@@ -144,12 +125,6 @@ const Libros = () => {
   };
 
   const handleEditLibro = async () => {
-    if (!isLoggedIn) {
-      alert("Debes iniciar sesión para editar un libro.");
-      navigate("/login");
-      return;
-    }
-
     if (!libroEditado.nombre || !libroEditado.autor || !libroEditado.genero) {
       alert("Por favor, completa todos los campos requeridos.");
       return;
@@ -180,12 +155,6 @@ const Libros = () => {
   };
 
   const handleDeleteLibro = async () => {
-    if (!isLoggedIn) {
-      alert("Debes iniciar sesión para eliminar un libro.");
-      navigate("/login");
-      return;
-    }
-
     if (libroAEliminar) {
       try {
         const libroRef = doc(db, "libros", libroAEliminar.id);
@@ -215,7 +184,6 @@ const Libros = () => {
     setShowDeleteModal(true);
   };
 
-  // Filtrar libros por nombre según la búsqueda
   const librosFiltrados = libros.filter((libro) =>
     libro.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -229,7 +197,6 @@ const Libros = () => {
         Agregar libro
       </Button>
 
-      {/* Cuadro de búsqueda */}
       <Form.Control
         type="text"
         placeholder="Buscar por nombre..."
@@ -238,16 +205,21 @@ const Libros = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
       />
 
-      <TablaLibros libros={librosFiltrados} openEditModal={openEditModal} openDeleteModal={openDeleteModal} />
-      
+      <TablaLibros
+        libros={librosFiltrados}
+        openEditModal={openEditModal}
+        openDeleteModal={openDeleteModal}
+        openQRModal={openQRModal} // ✅ importante
+      />
+
       <ModalRegistroLibro {...{ showModal, setShowModal, nuevoLibro, handleInputChange, handlePdfChange, handleAddLibro }} />
       <ModalEdicionLibro {...{ showEditModal, setShowEditModal, libroEditado, handleEditInputChange, handleEditPdfChange, handleEditLibro }} />
       <ModalEliminacionLibro {...{ showDeleteModal, setShowDeleteModal, handleDeleteLibro }} />
       <ModalQR
-      show={showQRModal}
-      handleClose={handleCloseQRModal}
-      qrUrl={selectedUrl}
-       />
+        show={showQRModal}
+        handleClose={handleCloseQRModal}
+        qrUrl={selectedUrl}
+      />
     </Container>
   );
 };

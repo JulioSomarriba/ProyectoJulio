@@ -101,6 +101,15 @@ const Encabezado = () => {
                 {t("menu.pronunciacion")}
               </Nav.Link>
 
+               <Nav.Link
+                onClick={() => handleNavigate("/empleados")}
+                className={isCollapsed ? "color-texto-marca" : "text-white"}
+              >
+                {isCollapsed ? <i className="bi-cloud-sun-fill me-2"></i> : null}
+                <strong>{t("empleados")}</strong>
+
+              </Nav.Link>
+
               <Nav.Link
                 onClick={() => handleNavigate("/clima")}
                 className={isCollapsed ? "color-texto-marca" : "text-white"}
